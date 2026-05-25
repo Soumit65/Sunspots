@@ -1,30 +1,301 @@
 # Sunspots
 
-![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+> A Python toolkit for solar image analysis, sunspot detection, and feature characterization using modern image-processing techniques.
+
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Status](https://img.shields.io/badge/status-active-success.svg)
+![Astronomy](https://img.shields.io/badge/domain-solar%20physics-orange.svg)
 [![GitHub](https://img.shields.io/badge/GitHub-Soumit65%2FSunspots-blue?logo=github)](https://github.com/Soumit65/Sunspots)
 
-A Python package for detecting, tracking, and analyzing sunspots from solar images using adaptive thresholding and contour analysis.
+---
 
-## Features
+# About The Project
 
-- **Bradley-Roth Adaptive Thresholding**: Efficient detection algorithm adapted for sunspot identification
-- **Sunspot Detection**: Automatic detection of sunspots with contour analysis
-- **Area Calculation**: Precise area measurement of detected sunspots
-- **Property Analysis**: Calculate circularity, aspect ratio, centroid, and more
-- **Multiple Thresholding Methods**: Support for Otsu, Gaussian, and Mean adaptive thresholding
-- **Image Processing Utilities**: Loading, normalization, CLAHE enhancement, and more
-- **Simple API**: Easy-to-use functions for both quick analysis and advanced workflows
+**Sunspots** is an open-source Python package developed during the **Astro Lab Summer Internship 2024** for analyzing solar imagery and detecting sunspots using modern image-processing techniques.
 
-## Installation
+The project was originally created to explore how computational methods can be applied to real astronomical imaging data. Over time, it evolved into a reusable scientific toolkit for:
 
-### From PyPI (Coming Soon)
+- solar image preprocessing
+- adaptive thresholding
+- feature extraction
+- contour analysis
+- quantitative sunspot measurements
 
-```bash
-pip install sunspots
+The package combines astronomy and computer vision concepts into a beginner-friendly yet research-oriented framework.
+
+---
+
+# What Are Sunspots?
+
+Sunspots are darker, cooler regions on the Sun’s surface caused by intense magnetic activity.
+
+They are scientifically important because they help researchers study:
+
+- solar magnetic fields
+- solar cycles
+- stellar activity
+- space weather
+- plasma dynamics
+
+Analyzing sunspots helps scientists better understand solar behavior and its effects on Earth.
+
+---
+
+# How This Package Works
+
+The workflow used in this package follows a standard astronomical image-analysis pipeline.
+
+---
+
+## Step 1 — Load Solar Images
+
+The package first loads solar images from disk using OpenCV and NumPy.
+
+```python
+image = load_image("solar_image.jpg")
 ```
 
-### From Source
+This converts the image into an array that can be processed mathematically.
+
+---
+
+## Step 2 — Image Preprocessing
+
+Real astronomical images often contain:
+
+- noise
+- uneven brightness
+- low contrast
+- detector artifacts
+
+To improve feature detection, preprocessing techniques are applied.
+
+### CLAHE Contrast Enhancement
+
+CLAHE (Contrast Limited Adaptive Histogram Equalization) improves local contrast while preventing over-amplification of noise.
+
+```python
+enhanced = apply_clahe(image)
+```
+
+Useful for making faint sunspots more visible.
+
+---
+
+### Gaussian Smoothing
+
+Gaussian blur reduces high-frequency noise and smooths the image.
+
+```python
+smoothed = gaussian_blur(enhanced)
+```
+
+This helps prevent false detections.
+
+---
+
+### Image Normalization
+
+Normalization rescales image intensities into a standard range.
+
+```python
+normalized = normalize_image(smoothed)
+```
+
+This improves thresholding consistency.
+
+---
+
+# Step 3 — Adaptive Thresholding
+
+The core of the package is the **Bradley–Roth Adaptive Thresholding Algorithm**.
+
+Traditional thresholding uses a single brightness cutoff across the entire image. This often fails for solar imagery because brightness varies across the solar disk.
+
+Adaptive thresholding instead computes local intensity statistics around each pixel.
+
+---
+
+## Bradley–Roth Thresholding
+
+The Bradley–Roth algorithm uses an **integral image** to efficiently compute local mean brightness values.
+
+Pixels darker than their local neighborhood are classified as sunspots.
+
+```python
+binary = bradley_roth_threshold(
+    image,
+    block_size=51,
+    constant=10
+)
+```
+
+### Parameters
+
+| Parameter | Meaning |
+|---|---|
+| `block_size` | Size of local neighborhood |
+| `constant` | Sensitivity adjustment |
+| `image` | Input solar image |
+
+### Why It Matters
+
+Solar images often have:
+
+- radial brightness gradients
+- atmospheric distortion
+- non-uniform illumination
+
+Adaptive thresholding handles these much better than global thresholding.
+
+---
+
+# 🧩 Step 4 — Contour Detection
+
+Once thresholding produces a binary image, contours are extracted.
+
+Contours represent connected regions of pixels identified as sunspots.
+
+```python
+spots = detect_sunspots(image)
+```
+
+Each contour is analyzed geometrically.
+
+---
+
+# 📊 Step 5 — Scientific Measurements
+
+For every detected sunspot, the package calculates physical and geometric properties.
+
+---
+
+## Area
+
+Measures the number of pixels occupied by the feature.
+
+```python
+spot.area
+```
+
+Useful for studying solar activity intensity.
+
+---
+
+## Perimeter
+
+Measures boundary length.
+
+```python
+spot.perimeter
+```
+
+---
+
+## Circularity
+
+Quantifies how circular the feature is.
+
+```python
+spot.circularity
+```
+
+Computed using:
+
+```math
+4\pi A / P^2
+```
+
+where:
+
+- \(A\) = area
+- \(P\) = perimeter
+
+Values close to 1 indicate nearly circular features.
+
+---
+
+## Centroid
+
+Computes the center position of the sunspot.
+
+```python
+spot.centroid
+```
+
+Useful for tracking motion across solar observations.
+
+---
+
+## Bounding Box
+
+Determines the smallest rectangle surrounding the feature.
+
+```python
+spot.bounding_box
+```
+
+Useful for cropping and visualization.
+
+---
+
+# Features
+
+## Sunspot Detection
+
+Automatically identify solar features using:
+
+- Bradley–Roth adaptive thresholding
+- Otsu thresholding
+- Contour segmentation
+- Morphological filtering
+
+---
+
+## Scientific Measurements
+
+Compute quantitative properties including:
+
+- area
+- perimeter
+- circularity
+- aspect ratio
+- centroids
+- bounding boxes
+
+---
+
+## Image Processing Utilities
+
+Built-in preprocessing tools include:
+
+- CLAHE enhancement
+- Gaussian smoothing
+- normalization
+- resizing
+- grayscale conversion
+
+---
+
+## Simple API
+
+Designed for both beginners and researchers.
+
+```python
+import sunspots
+
+image = sunspots.load_image("solar_image.jpg")
+spots = sunspots.detect_sunspots(image)
+
+print(f"Detected {len(spots)} sunspots")
+```
+
+---
+
+# Installation
+
+## Install From Source
 
 ```bash
 git clone https://github.com/Soumit65/Sunspots.git
@@ -32,191 +303,187 @@ cd Sunspots
 pip install -e .
 ```
 
-### Development Installation
+---
+
+## Development Installation
 
 ```bash
 pip install -e ".[dev,docs]"
 ```
 
-## Quick Start
+---
+
+## Planned PyPI Release
+
+```bash
+pip install sunspots
+```
+
+---
+
+# Quick Start Example
 
 ```python
 import sunspots
-from sunspots import detect_sunspots, load_image, draw_sunspots
+from sunspots import detect_sunspots, draw_sunspots
 
-# Load an image
+# Load image
 image = sunspots.load_image("solar_image.jpg")
 
 # Detect sunspots
-detected_spots = sunspots.detect_sunspots(image, min_area=50)
+spots = detect_sunspots(
+    image,
+    min_area=50,
+    threshold_method="otsu"
+)
 
-# Draw results
-result = sunspots.draw_sunspots(image, detected_spots)
+# Draw detections
+result = draw_sunspots(image, spots)
 
 # Print statistics
-for i, spot in enumerate(detected_spots):
-    print(f"Sunspot {i+1}:")
-    print(f"  Area: {spot.area:.2f} pixels")
-    print(f"  Circularity: {spot.circularity:.3f}")
-    print(f"  Centroid: {spot.centroid}")
+for i, spot in enumerate(spots):
+    print(f"Sunspot {i+1}")
+    print(f"Area        : {spot.area:.2f}")
+    print(f"Circularity : {spot.circularity:.3f}")
+    print(f"Centroid    : {spot.centroid}")
 ```
 
-## Usage Examples
+---
 
-### Basic Thresholding
+# Example Analysis Pipeline
 
 ```python
-from sunspots import bradley_roth_threshold, load_image, save_image
+from sunspots import (
+    load_image,
+    apply_clahe,
+    gaussian_blur,
+    detect_sunspots
+)
 
-# Load image
+# Load solar image
 image = load_image("solar_image.jpg")
 
-# Apply Bradley-Roth adaptive thresholding
-binary = bradley_roth_threshold(image, block_size=51, constant=10)
+# Enhance image contrast
+enhanced = apply_clahe(image)
 
-# Save result
-save_image("thresholded.jpg", binary)
+# Remove noise
+smoothed = gaussian_blur(enhanced)
+
+# Detect features
+spots = detect_sunspots(smoothed)
+
+print(f"Detected {len(spots)} sunspots")
 ```
 
-### Advanced Contour Analysis
+---
 
-```python
-from sunspots import analyze_contours
+# Project Structure
 
-# Analyze contours with statistics
-sunspots_list, stats = analyze_contours(binary_image, min_area=50)
-
-print(f"Number of sunspots: {stats['count']}")
-print(f"Total area: {stats['total_area']:.2f}")
-print(f"Mean area: {stats['mean_area']:.2f}")
-print(f"Mean circularity: {stats['mean_circularity']:.3f}")
+```text
+Sunspots/
+│
+├── sunspots/
+│   ├── thresholding.py
+│   ├── area_calculator.py
+│   ├── utils.py
+│   └── __init__.py
+│
+├── docs/
+│   ├── installation.rst
+│   ├── tutorials.rst
+│   ├── examples.rst
+│   └── api_reference.rst
+│
+├── notebooks/
+├── README.md
+├── pyproject.toml
+└── LICENSE
 ```
 
-### Image Enhancement
+---
 
-```python
-from sunspots import load_image, apply_clahe, gaussian_blur, normalize_image
+# Documentation
 
-image = load_image("solar_image.jpg")
+The full documentation includes:
 
-# Apply preprocessing
-enhanced = apply_clahe(image, clip_limit=2.0)
-enhanced = gaussian_blur(enhanced, kernel_size=5)
-normalized = normalize_image(enhanced, method="minmax")
+- installation guides
+- tutorials
+- worked examples
+- API references
+- preprocessing workflows
+- thresholding explanations
+
+Documentation website:
+
+https://soumit65.github.io/Sunspots/
+
+---
+
+# Future Roadmap
+
+Planned future features include:
+
+- FITS file support
+- solar limb-darkening correction
+- active region tracking
+- flare detection
+- machine-learning segmentation
+- time-series solar analysis
+- interactive dashboards
+
+---
+
+# Contributing
+
+Contributions are welcome.
+
+```bash
+git checkout -b feature/my-feature
+git commit -m "Add new feature"
+git push origin feature/my-feature
 ```
 
-## API Reference
+Then open a Pull Request.
 
-### Core Functions
+---
 
-#### `bradley_roth_threshold(image, block_size=50, constant=10.0, convert_grayscale=True)`
-Apply Bradley-Roth adaptive thresholding.
+# Citation
 
-**Parameters:**
-- `image` (np.ndarray): Input image
-- `block_size` (int): Size of neighborhood (must be odd)
-- `constant` (float): Constant subtracted from mean
-- `convert_grayscale` (bool): Convert to grayscale if color
-
-**Returns:** Binary image (uint8)
-
-#### `detect_sunspots(image, min_area=50, max_area=None, threshold_method='otsu')`
-Detect sunspots in an image.
-
-**Parameters:**
-- `image` (np.ndarray): Input image
-- `min_area` (float): Minimum area threshold
-- `max_area` (float): Maximum area threshold
-- `threshold_method` (str): 'otsu' or 'binary'
-
-**Returns:** List of Sunspot objects
-
-#### `analyze_contours(image, min_area=50, max_area=None)`
-Analyze contours and return statistics.
-
-**Returns:** Tuple of (sunspots_list, statistics_dict)
-
-### Sunspot Data Class
-
-Each detected sunspot is a `Sunspot` object with:
-- `area`: Area in pixels
-- `perimeter`: Perimeter length
-- `centroid`: (x, y) center coordinates
-- `bounding_box`: (x, y, width, height)
-- `contour`: OpenCV contour
-- `circularity`: Shape measure (4π * area / perimeter²)
-- `aspect_ratio`: Width/height ratio
-
-### Utility Functions
-
-- `load_image(path, as_grayscale=False)`: Load image from file
-- `save_image(path, image)`: Save image to file
-- `normalize_image(image, method='minmax')`: Normalize intensity values
-- `resize_image(image, width=None, height=None, scale=None)`: Resize image
-- `apply_clahe(image, clip_limit=2.0, tile_size=8)`: Contrast enhancement
-- `gaussian_blur(image, kernel_size=5, sigma=1.0)`: Noise reduction
-
-## Dependencies
-
-- numpy >= 1.19.0
-- opencv-python >= 4.5.0
-- matplotlib >= 3.3.0
-- scipy >= 1.5.0
-- scikit-image >= 0.18.0
-- Pillow >= 8.0.0
-
-## Requirements
-
-- Python >= 3.8
-- For GPU acceleration: CUDA-compatible OpenCV build
-
-## Contributing
-
-Contributions are welcome! Please feel free to:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Citation
-
-If you use this package in your research, please cite:
+If you use this package in academic or research work, please cite:
 
 ```bibtex
 @software{sunspots2024,
   author = {Dey, Soumit},
-  title = {Sunspots: Sunspot Detection and Analysis Package},
+  title = {Sunspots: Solar Image Analysis Toolkit},
   year = {2024},
   url = {https://github.com/Soumit65/Sunspots}
 }
 ```
 
-## License
+---
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+# References
 
-## References
-
-- Bradley, D., & Roth, G. (2007). Adaptive Thresholding using the Integral Image. Journal of Graphics Tools, 12(2), 13-21.
+- Bradley, D., & Roth, G. (2007). *Adaptive Thresholding Using the Integral Image*. Journal of Graphics Tools, 12(2), 13–21.
 - OpenCV Documentation: https://docs.opencv.org/
 
-## Acknowledgments
+---
 
-- Developed as part of Summer 2024 Astronomy Internship
-- Special thanks to the solar observation community
-- OpenCV and NumPy communities for excellent tools
+# Acknowledgments
 
-## Contact
+- Developed during Astro Lab Summer Internship 2024
+- Inspired by modern solar image-analysis workflows
+- Built using the scientific Python ecosystem
 
-- GitHub: [@Soumit65](https://github.com/Soumit65)
-- Issues: [GitHub Issues](https://github.com/Soumit65/Sunspots/issues)
+---
 
-## Changelog
+# Contact
 
-### Version 0.1.0 (2024)
-- Initial release
-- Bradley-Roth adaptive thresholding implementation
-- Sunspot detection and area calculation
-- Image processing utilities
-- Documentation and examples
+- GitHub: https://github.com/Soumit65
+- Issues: https://github.com/Soumit65/Sunspots/issues
+
+---
+
+# License
+
+Distributed under the MIT License. See `LICENSE` for details.
