@@ -1,6 +1,0 @@
-include README.md
-include LICENSE
-include CHANGELOG.md
-include requirements-docs.txt
-recursive-include docs *.rst *.py
-recursive-include sunspots *.py
