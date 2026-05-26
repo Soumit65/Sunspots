@@ -6,8 +6,8 @@ using Bradley-Roth adaptive thresholding and contour analysis.
 """
 
 __version__ = "0.1.0"
-__author__ = "Soumit Dey"
-__email__ = "your.email@example.com"
+__author__ = "Soumit Rao"
+__email__ = "rsoumit51@gmail.com"
 __license__ = "MIT"
 
 from .thresholding import bradley_roth_threshold, adaptive_threshold
