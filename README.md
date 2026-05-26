@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![GitHub](https://img.shields.io/badge/GitHub-Soumit65%2FSuryaPy-blue?logo=github)](https://github.com/Soumit65/SuryaPy)
 
-**SuryaPy** — from *Surya*, the Sun in Sanskrit — is a Python package for detecting, analyzing, and measuring sunspots from solar observations. Built on my (Soumit Rao) 2024 summer astronomy internship work at Ashoka University.
+**SuryaPy** — from *Surya*, the Sun in Sanskrit — is a Python package for detecting, analyzing, and measuring sunspots from solar observations. Built on my (Soumit Rao) 2024 summer astronomy internship work at Ashoka University. Check out faq.rst if you have some doubts regarding installation or functions, as well as the cited references.
 
 **About**
 The aim of the internship was to help develop a new solar experiment for the Astrolab course AST-1080/PHY-1080 at Ashoka University. We used white light images from our Nikon DSLR and 8 inch CELESTRON Nexstar telescope and measured the rotation periods of the spots as well as the area of the spots. These results and methods were compared using data from the Solar Influences Data Center at the Royal Observatory of Belgium. 
