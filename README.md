@@ -262,7 +262,7 @@ If you use SuryaPy in your research:
 
 ```bibtex
 @software{suryapy2024,
-  author = {Dey, Soumit},
+  author = {Rao, Soumit},
   title = {SuryaPy: Solar Sunspot Detection and Analysis},
   year = {2024},
   url = {https://github.com/Soumit65/SuryaPy}
