@@ -6,9 +6,13 @@
 
 **SuryaPy** — from *Surya*, the Sun in Sanskrit — is a Python package for detecting, analyzing, and measuring sunspots from solar observations. Built on my (Soumit Rao) 2024 summer astronomy internship work at Ashoka University.
 
-Uses the **Bradley-Roth adaptive thresholding algorithm** with **connected component analysis** to identify sunspots, applies physical corrections (foreshortening, limb darkening), and converts measurements to standard solar physics units.
+**About**
+The aim of the internship was to help develop a new solar experiment for the Astrolab course AST-1080/PHY-1080 at Ashoka University. We used white light images from our 8 inch CELESTRON Nexstar telescope and measured the rotation periods of the spots as well as the area of the spots. These results and methods were compared using data from the Solar Influences Data Center at the Royal Observatory of Belgium. This repository contains some of the methods we used. You can find a more detailed explanantiono of sunspots tracking in out SUMMER 2024 Astronomy internship report attached in this repository. For any questions please reach out to me at rsoumit51@gmail.com / soumit.rao_ug2023@ashoka.edu.in
+
+Any reccomendations, collaborations and contributions are welcome. The aim is to keep this repository open and accessible to as many people as possible. Since this repository is new, it may face some minor issues—— any and all feedback is welcome! 
 
 ## Features
+SuraPy sses the **Bradley-Roth adaptive thresholding algorithm** with **connected component analysis** to identify sunspots, applies physical corrections (foreshortening, limb darkening), and converts measurements to standard solar physics units.
 
 **Bradley-Roth Adaptive Thresholding** — Integral-image based local contrast detection, robust to varying lighting
 
