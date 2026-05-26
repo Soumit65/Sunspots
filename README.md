@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![GitHub](https://img.shields.io/badge/GitHub-Soumit65%2FSuryaPy-blue?logo=github)](https://github.com/Soumit65/SuryaPy)
 
-**SuryaPy** — from *Surya*, the Sun in Sanskrit — is a Python package for detecting, analyzing, and measuring sunspots from solar observations. Built on your 2024 astronomy internship work.
+**SuryaPy** — from *Surya*, the Sun in Sanskrit — is a Python package for detecting, analyzing, and measuring sunspots from solar observations. Built on my (Soumit Rao) 2024 summer astronomy internship work at Ashoka University.
 
 Uses the **Bradley-Roth adaptive thresholding algorithm** with **connected component analysis** to identify sunspots, applies physical corrections (foreshortening, limb darkening), and converts measurements to standard solar physics units.
 
