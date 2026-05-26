@@ -10,17 +10,17 @@ Uses the **Bradley-Roth adaptive thresholding algorithm** with **connected compo
 
 ## Features
 
-✨ **Bradley-Roth Adaptive Thresholding** — Integral-image based local contrast detection, robust to varying lighting
+**Bradley-Roth Adaptive Thresholding** — Integral-image based local contrast detection, robust to varying lighting
 
-🎯 **Connected Component Analysis** — Morphological cleanup + `scipy.ndimage.label` for automatic sunspot identification
+**Connected Component Analysis** — Morphological cleanup + `scipy.ndimage.label` for automatic sunspot identification
 
-🔬 **Physical Corrections** — Foreshortening correction, limb darkening removal, pixel-to-km² conversion
+**Physical Corrections** — Foreshortening correction, limb darkening removal, pixel-to-km² conversion
 
-📍 **Spot Tracking** — Integration with `astrolab`'s centroid-finding for multi-image registration
+**Spot Tracking** — Integration with `astrolab`'s centroid-finding for multi-image registration
 
-📊 **Standard Units** — Convert to millionths of solar hemisphere (MH), angular distances, and heliocentric coordinates
+**Standard Units** — Convert to millionths of solar hemisphere (MH), angular distances, and heliocentric coordinates
 
-🚀 **Built on Astrolab** — Leverages your college's solar imaging library for I/O, filtering, and display
+**Built on Astrolab** — Leverages Astrolab package by Philip Cherian - https://astrolab.readthedocs.io/en/latest/
 
 ## Quick Start
 
