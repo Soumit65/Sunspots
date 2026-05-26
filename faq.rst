@@ -40,9 +40,8 @@ A: Install astrolab (your college's solar imaging library):
 .. code-block:: bash
 
    # From your college's repo
-   git clone https://github.com/your-college/astrolab.git
-   cd astrolab
-   pip install -e .
+   import astrolab
+   print(astrolab.__version__)
 
 Check astrolab docs for details.
 
