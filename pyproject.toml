@@ -73,7 +73,7 @@ jupyter = [
 "Bug Tracker" = "https://github.com/Soumit65/SuryaPy/issues"
 
 [tool.setuptools]
-packages = ["sunspots"]
+packages = ["suryapy"]
 
 [tool.black]
 line-length = 100
