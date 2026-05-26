@@ -16,8 +16,9 @@ __email__ = "rsoumit51@gmail.com"
 __license__ = "MIT"
 
 from .thresholding import *
-from .area_calculator import *
-from .utils import *
+from .area import *
+from .correction import *
+from .tracking import *
 __all__ = [
     "bradley_roth_threshold",
     "adaptive_threshold",
