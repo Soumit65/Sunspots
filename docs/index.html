@@ -1,42 +1,864 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>SuryaPy</title>
-  <style>
-    body {
-      font-family: Arial;
-      margin: 40px;
-      background: #f7f7f7;
-    }
-    .box {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 800px;
-      margin: auto;
-    }
-    img {
-      width: 100%;
-      margin-top: 10px;
-      border-radius: 8px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuryaPy - Sunspot Detection & Analysis</title>
+    <meta name="description" content="SuryaPy: Python package for detecting, analyzing, and measuring sunspots from solar observations using Bradley-Roth thresholding and connected component analysis.">
+    <meta name="keywords" content="sunspots, solar analysis, astronomy, Python, image processing">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500&display=swap');
+
+        :root {
+            --primary-dark: #0f172a;
+            --primary-darker: #1a1f3a;
+            --accent-gold: #fbbf24;
+            --accent-light: #f59e0b;
+            --text-light: #f1f5f9;
+            --text-muted: #cbd5e1;
+            --bg-card: rgba(255,255,255,0.05);
+            --border-gold: rgba(251, 191, 36, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(251, 191, 36, 0.1);
+            overflow-y: auto;
+            padding: 2rem 0;
+            z-index: 100;
+        }
+
+        nav .logo {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        nav .logo h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            color: var(--accent-gold);
+        }
+
+        nav .logo p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        nav a {
+            display: block;
+            padding: 0.875rem 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--accent-gold);
+            border-left-color: var(--accent-gold);
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        nav a.active {
+            color: var(--accent-gold);
+            background: rgba(251, 191, 36, 0.15);
+            border-left-color: var(--accent-gold);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent-gold);
+            background: rgba(251, 191, 36, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card h3 {
+            color: var(--accent-gold);
+            margin-bottom: 0.75rem;
+            font-size: 1.15rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Content Sections */
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .content h3 {
+            font-size: 1.25rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .content p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .content ul, .content ol {
+            color: var(--text-muted);
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .content li {
+            margin-bottom: 0.75rem;
+        }
+
+        .content strong {
+            color: var(--text-light);
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #a8e6cf;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block.inline {
+            display: inline-block;
+            padding: 1rem;
+            margin-bottom: 0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--accent-gold);
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(251, 191, 36, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            color: #93c5fd;
+        }
+
+        .info-box strong {
+            color: #60a5fa;
+        }
+
+        /* API Reference */
+        .api-grid {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .api-item {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(251, 191, 36, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .api-item code {
+            color: #fbbf24;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .api-item p {
+            margin: 0.5rem 0 0 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* FAQ */
+        .faq-item {
+            border: 1px solid rgba(251, 191, 36, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            padding: 1.25rem;
+            background: rgba(26, 31, 58, 0.8);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 1rem 1.25rem;
+            background: rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(251, 191, 36, 0.1);
+            color: var(--text-muted);
+            line-height: 1.7;
+            display: none;
+        }
+
+        .faq-answer.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(26, 31, 58, 0.95);
+            border-top: 1px solid rgba(251, 191, 36, 0.1);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-light);
+            text-decoration: underline;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(251, 191, 36, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(251, 191, 36, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                width: 200px;
+            }
+
+            main {
+                margin-left: 200px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .content {
+                padding: 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            nav {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid rgba(251, 191, 36, 0.1);
+            }
+
+            main {
+                margin-left: 0;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <h1>SuryaPy ☀️</h1>
+            <p>Sunspot analysis toolkit</p>
+        </div>
+        <a class="nav-link active" data-section="home">🏠 Home</a>
+        <a class="nav-link" data-section="quickstart">⚡ Quick Start</a>
+        <a class="nav-link" data-section="install">📦 Installation</a>
+        <a class="nav-link" data-section="api">📚 API Reference</a>
+        <a class="nav-link" data-section="advanced">🔬 Advanced Guide</a>
+        <a class="nav-link" data-section="faq">❓ FAQ</a>
+    </nav>
 
-<div class="box">
-  <h1>SuryaPy Documentation</h1>
-  <p>Welcome to SuryaPy.</p>
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="active">
+            <div class="hero">
+                <h1>SuryaPy ☀️</h1>
+                <p>Detect, analyze, and measure sunspots from solar observations</p>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="icon">⚙️</div>
+                        <h3>Bradley-Roth</h3>
+                        <p>Adaptive thresholding algorithm robust to varying lighting</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🔍</div>
+                        <h3>Connected Components</h3>
+                        <p>Automatic sunspot identification with morphological cleanup</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📐</div>
+                        <h3>Physical Corrections</h3>
+                        <p>Foreshortening, limb darkening, and accurate unit conversion</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🎯</div>
+                        <h3>Spot Tracking</h3>
+                        <p>Multi-image registration for tracking rotation periods</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📊</div>
+                        <h3>Standard Units</h3>
+                        <p>Convert to millionths of solar hemisphere (MH)</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🔗</div>
+                        <h3>Built on Astrolab</h3>
+                        <p>Integrates seamlessly with Astrolab imaging package</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <h2>Example Images</h2>
+        <!-- Quick Start Section -->
+        <section id="quickstart">
+            <div class="content">
+                <h2>Quick Start</h2>
+                <p>Get up and running with SuryaPy in just a few lines of code. This example loads a solar image, detects sunspots, and measures their areas.</p>
 
-  <img src="images/bradley_roth_clean.png">
-  <img src="images/bradley_roth_threshold.png">
-  <img src="images/component_inspection.png">
-  <img src="images/connected_components.png">
-  <img src="images/area_distribution.png">
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>from astrolab import imaging as im
+from scipy import ndimage as scp
+import suryapy
 
-</div>
+# Load and filter a solar image
+raw_image = im.load_image("DSC_1036.JPG")
+filtered = scp.gaussian_filter(raw_image, sigma=0.5)
 
+# Mask the solar disk
+cropped = suryapy.mask_sun(filtered, sun_threshold=50)
+
+# Apply Bradley-Roth thresholding
+br_mask = suryapy.b_roth(cropped, threshold=9, Nx=100)
+
+# Find sunspots (connected components)
+labeled, n, _, _, bbox = suryapy.find_components(
+    br_mask, cropped, min_size=1000
+)
+
+print(f"Found {n} sunspots!")</code></pre>
+                </div>
+
+                <h3>What's happening here?</h3>
+                <ol>
+                    <li><strong>Load and filter:</strong> Read a solar image and apply Gaussian filtering to reduce noise</li>
+                    <li><strong>Mask the solar disk:</strong> Crop to just the sun and apply a mask to avoid analyzing the background</li>
+                    <li><strong>Threshold:</strong> Use Bradley-Roth adaptive thresholding to identify dark regions (sunspots)</li>
+                    <li><strong>Find components:</strong> Use connected component analysis to identify individual sunspots</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>💡 Tip:</strong> Start with default parameters (threshold=9, Nx=100) and adjust based on your image quality.
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation Section -->
+        <section id="install">
+            <div class="content">
+                <h2>Installation</h2>
+
+                <h3>From Source (Recommended)</h3>
+                <div class="code-block">
+                    <pre><code>git clone https://github.com/Soumit65/SuryaPy.git
+cd SuryaPy
+pip install -e .</code></pre>
+                </div>
+
+                <h3>With Development Tools</h3>
+                <div class="code-block">
+                    <pre><code>pip install -e ".[dev,docs,jupyter]"</code></pre>
+                </div>
+
+                <h3>Requirements</h3>
+                <ul>
+                    <li><strong>Python 3.8+</strong> — 3.10+ recommended for best performance</li>
+                    <li><strong>astrolab ≥ 0.1.0</strong> — Your college's solar imaging library</li>
+                    <li><strong>numpy ≥ 1.19.0</strong> — Array operations</li>
+                    <li><strong>scipy ≥ 1.5.0</strong> — Scientific computing and ndimage</li>
+                    <li><strong>matplotlib ≥ 3.3.0</strong> — Plotting and visualization</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>⚠️ Important:</strong> astrolab must be installed and configured first. It's required for all solar imaging operations.
+                </div>
+            </div>
+        </section>
+
+        <!-- API Reference Section -->
+        <section id="api">
+            <div class="content">
+                <h2>API Reference</h2>
+                <p>Core functions organized by category</p>
+
+                <h3>Thresholding</h3>
+                <div class="api-grid">
+                    <div class="api-item">
+                        <code>b_roth(image, threshold=9, Nx=100, print_log=True)</code>
+                        <p>Bradley-Roth adaptive thresholding for sunspot detection</p>
+                    </div>
+                    <div class="api-item">
+                        <code>mask_sun(image, sun_threshold=50, crop=True)</code>
+                        <p>Mask and crop the solar disk from background</p>
+                    </div>
+                </div>
+
+                <h3>Tracking & Alignment</h3>
+                <div class="api-grid">
+                    <div class="api-item">
+                        <code>find_spot(cropped, spot_pos, search=100)</code>
+                        <p>Find sunspot centroid using astrolab's find_star</p>
+                    </div>
+                    <div class="api-item">
+                        <code>process(image, spot_pos, print_log=True)</code>
+                        <p>Full preprocessing pipeline: crop → find spot</p>
+                    </div>
+                </div>
+
+                <h3>Corrections & Analysis</h3>
+                <div class="api-grid">
+                    <div class="api-item">
+                        <code>limb_darkening_correction(cropped, show_plot=True)</code>
+                        <p>Remove limb darkening via radial median profile</p>
+                    </div>
+                    <div class="api-item">
+                        <code>find_components(br_mask, cropped, min_size=1000, print_log=True)</code>
+                        <p>Connected component analysis with morphological cleanup</p>
+                    </div>
+                    <div class="api-item">
+                        <code>inspect_component(target_label, labeled_image, num_components, ...)</code>
+                        <p>Get detailed info about a single sunspot component</p>
+                    </div>
+                </div>
+
+                <h3>Physical Conversions</h3>
+                <div class="api-grid">
+                    <div class="api-item">
+                        <code>foreshortening_correction(area_pixels, y, z, R_sun)</code>
+                        <p>Correct for projection angle at position (y, z)</p>
+                    </div>
+                    <div class="api-item">
+                        <code>pixels_to_km2(area_corrected, km_per_pixel)</code>
+                        <p>Convert pixel area to square kilometers</p>
+                    </div>
+                    <div class="api-item">
+                        <code>km2_to_millionths(area_km2)</code>
+                        <p>Convert to millionths of solar hemisphere (standard unit)</p>
+                    </div>
+                    <div class="api-item">
+                        <code>angular_distance(x_spot, y_spot, pixel_radius)</code>
+                        <p>Angular distance from disk center</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Guide Section -->
+        <section id="advanced">
+            <div class="content">
+                <h2>Advanced Guide</h2>
+                <p>Complete workflow showing how to measure multiple sunspots with physical corrections applied</p>
+
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Full analysis pipeline
+corrected = suryapy.limb_darkening_correction(cropped)
+br = suryapy.b_roth(corrected, threshold=9, Nx=100)
+labeled, n, _, sizes, bbox = suryapy.find_components(br, cropped)
+
+# Measure each sunspot
+for i in range(1, n+1):
+    info = suryapy.inspect_component(i, labeled, n, bbox, br, cropped)
+    area_px = info['area_pixels']
+    
+    # Correct for foreshortening
+    y, z = info['centroid_y'], info['centroid_z']
+    area_corr = suryapy.foreshortening_correction(area_px, y, z)
+    
+    # Convert to millionths of solar hemisphere
+    area_km2 = suryapy.pixels_to_km2(area_corr, km_per_pixel=458.58)
+    area_mh = suryapy.km2_to_millionths(area_km2)
+    
+    print(f"Spot {i}: {area_mh:.2f} MH")</code></pre>
+                </div>
+
+                <h3>Parameter Tuning</h3>
+                <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                    <tr style="border-bottom: 2px solid rgba(251, 191, 36, 0.3);">
+                        <th style="text-align: left; padding: 0.75rem; color: var(--accent-gold);">Parameter</th>
+                        <th style="text-align: left; padding: 0.75rem; color: var(--accent-gold);">Default</th>
+                        <th style="text-align: left; padding: 0.75rem; color: var(--accent-gold);">Effect</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(251, 191, 36, 0.1);">
+                        <td style="padding: 0.75rem; color: var(--text-muted);">threshold</td>
+                        <td style="padding: 0.75rem; color: var(--text-muted);">9</td>
+                        <td style="padding: 0.75rem; color: var(--text-muted);">Sensitivity (5-20 typical). Higher = more aggressive</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(251, 191, 36, 0.1);">
+                        <td style="padding: 0.75rem; color: var(--text-muted);">Nx</td>
+                        <td style="padding: 0.75rem; color: var(--text-muted);">100</td>
+                        <td style="padding: 0.75rem; color: var(--text-muted);">Window divisor. Smaller = larger window</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem; color: var(--text-muted);">min_size</td>
+                        <td style="padding: 0.75rem; color: var(--text-muted);">1000</td>
+                        <td style="padding: 0.75rem; color: var(--text-muted);">Minimum component area (pixels) to keep</td>
+                    </tr>
+                </table>
+
+                <div class="info-box">
+                    <strong>💡 Tip:</strong> Always apply limb darkening correction before thresholding. The solar disk edge appears artificially dark and can confuse the algorithm.
+                </div>
+
+                <h3>Calibration Example</h3>
+                <p>For your setup (DSLR + 8" CELESTRON), use:</p>
+                <div class="code-block" style="padding: 1rem; display: inline-block; width: 100%;">
+                    <pre><code>km_per_pixel = 458.58  # DSLR + 8" telescope calibration
+pixels_to_mh_factor = (km_per_pixel / 696000) ** 2 * 1e6</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq">
+            <div class="content">
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>What Python version do I need?</span>
+                        <span class="faq-toggle">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        Python 3.8 or higher. We recommend Python 3.10+ for best performance and compatibility with all dependencies.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Do I need to install astrolab separately?</span>
+                        <span class="faq-toggle">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        Yes, astrolab (from Ashoka University) must be installed and configured first. It's a core dependency for all solar imaging operations. Follow the astrolab documentation for installation instructions.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>What format should my solar images be?</span>
+                        <span class="faq-toggle">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        SuryaPy works with standard image formats (JPEG, PNG, FITS). The examples use Nikon DSLR images captured through a telescope, but any white-light solar observation in a standard format will work.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>What's the Bradley-Roth algorithm?</span>
+                        <span class="faq-toggle">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        It's an adaptive thresholding method that computes a local threshold based on the integral image. This makes it excellent for varying lighting conditions in solar images, unlike global thresholding methods. See the paper: Bradley & Roth (2007), Journal of Graphics Tools.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>How do I calibrate pixel-to-km conversion?</span>
+                        <span class="faq-toggle">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        Use your telescope/camera specs. For DSLR + 8" CELESTRON: ~458.58 km/pixel. SIDC standard: ~738.44 km/pixel. The internship report included in the repository has detailed calibration procedures for your specific setup.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Can I track sunspots across multiple images?</span>
+                        <span class="faq-toggle">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        Yes! Use find_spot() and process() to align and track spots in image sequences. This lets you measure rotation periods by tracking the same spot across days. Check the tracking tutorial for a complete example.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>How do I report issues or contribute?</span>
+                        <span class="faq-toggle">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        Open an issue on <a href="https://github.com/Soumit65/SuryaPy" style="color: var(--accent-gold);">GitHub</a>. Contributions are welcome! Fork the repository, make your changes on a feature branch, and submit a pull request. Email rsoumit51@gmail.com with questions.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>Built with ☀️ by <strong>Soumit Rao</strong></p>
+            <p>📧 <a href="mailto:rsoumit51@gmail.com">rsoumit51@gmail.com</a> | 🔗 <a href="https://github.com/Soumit65/SuryaPy">github.com/Soumit65/SuryaPy</a></p>
+            <p>MIT License • Made during 2024 Summer Astronomy Internship at Ashoka University</p>
+        </footer>
+    </main>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.getAttribute('data-section');
+                
+                // Update active nav
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Update active section
+                document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            });
+        });
+
+        // Copy code function
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '✓ Copied';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // FAQ toggle
+        function toggleFaq(btn) {
+            const answer = btn.nextElementSibling;
+            const toggle = btn.querySelector('.faq-toggle');
+            
+            answer.classList.toggle('show');
+            toggle.classList.toggle('open');
+        }
+    </script>
 </body>
 </html>
