@@ -48,10 +48,11 @@ Contents
 
 .. toctree::
    :maxdepth: 2
-   :caption: Documentation
+   :caption: Contents:
 
    installation
    quick_tutorial
    how_it_works
    examples
    api_reference
+   faq
