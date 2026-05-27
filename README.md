@@ -30,6 +30,7 @@ SuraPy uses the **Bradley-Roth adaptive thresholding algorithm** with **connecte
 
 ## Quick Start
 
+**Please refer to 'docs' for tutorials**
 ```python
 from astrolab import imaging as im
 from scipy import ndimage as scp
