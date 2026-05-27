@@ -42,3 +42,16 @@ Documentation
 -------------
 
 Explore the tutorials and examples to understand the full processing pipeline.
+
+Contents
+--------
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Documentation
+
+   installation
+   quick_tutorial
+   how_it_works
+   examples
+   api_reference
