@@ -19,6 +19,7 @@ from .thresholding import *
 from .area import *
 from .correction import *
 from .tracking import *
+from .suit import *
 __all__ = [
     "bradley_roth_threshold",
     "adaptive_threshold",
