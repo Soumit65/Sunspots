@@ -30,3 +30,13 @@ __all__ = [
     "save_image",
     "normalize_image",
 ]
+from .suit import (
+    load_suit_fits,
+    detect_solar_disk,
+    find_solar_center_fast,
+    radial_flatten,
+    extract_uv_features,
+    segment_uv_structures,
+    detect_uv_structures,
+    plot_suit_pipeline,
+)
