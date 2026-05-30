@@ -604,3 +604,24 @@ def plot_suit_pipeline(
         fig.savefig(save_path, dpi=150, bbox_inches="tight")
 
     return fig
+
+
+# ============================================================================
+# USER-FRIENDLY ALIASES
+# ============================================================================
+
+load_fits = load_suit_fits
+
+find_disk = detect_solar_disk
+
+find_center = find_solar_center_fast
+
+flatten = radial_flatten
+
+enhance = extract_uv_features
+
+segment = segment_uv_structures
+
+detect = detect_uv_structures
+
+show_pipeline = plot_suit_pipeline
