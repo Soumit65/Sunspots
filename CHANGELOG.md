@@ -29,6 +29,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `km2_to_millionths()` — km² to millionths of solar hemisphere (MH)
 - `angular_distance()` — Angular position on the solar disk
 
+#### Added processing pipeline for UV images from Aditya-L1 on-board instrument SUIT
+
 #### Documentation
 - Complete API reference with function signatures and examples
 - Getting started guide with workflow overview
@@ -53,23 +55,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Docs**: Sphinx + sphinx-rtd-theme
 - **CI/CD**: GitHub Actions
 
-### Features Highlight
-
-✨ **Bradley-Roth Adaptive Thresholding** — Integral-image based for sunspot detection
-
-🎯 **Connected Component Analysis** — Morphological cleanup + scipy.ndimage.label for individual sunspot identification
-
-🔬 **Physical Corrections** — Foreshortening angle correction, limb darkening removal
-
-📍 **Spot Tracking** — Multi-image registration via astrolab's centroid finding
-
-📊 **Standard Units** — Automatic conversion to millionths of solar hemisphere (MH)
-
 ### Known Limitations
 
 - CPU-based processing (GPU support may come in future)
 - Manual spot tracking across frames (auto-tracking planned)
-- Requires astrolab (your college's library)
+- Requires astrolab package
 
 ### Future Roadmap
 
@@ -95,7 +85,7 @@ If you use SuryaPy in research:
 
 ```bibtex
 @software{suryapy2024,
-  author = {Dey, Soumit},
+  author = {Rao, Soumit},
   title = {SuryaPy: Solar Sunspot Detection and Analysis},
   year = {2024},
   url = {https://github.com/Soumit65/SuryaPy}
